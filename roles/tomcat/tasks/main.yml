@@ -1,0 +1,30 @@
+---
+
+- name: install packages
+  yum: name={{ item }} state=present
+  sudo: yes
+  with_items:
+  - java-1.8.0-openjdk-headless
+  - tomcat6
+  - subversion
+#ajp connector
+- name: edit server.xml
+  template: src=server.xml.j2 dest=/etc/tomcat6/server.xml
+  sudo: yes
+
+- name: add .war file
+  copy: src=helloworld.war dest=/usr/share/tomcat6/webapps/helloworld.war
+  sudo: yes
+
+- name: iptables rules
+  sudo: yes
+  template: src=iptables.sh.j2 dest=/etc/tomcat6/iptables.sh mode=550
+
+- name: forward 
+  sudo: yes
+  command: /etc/tomcat6/iptables.sh
+
+- name: restart tomcat
+  service: name=tomcat6 state=restarted
+  sudo: yes
+

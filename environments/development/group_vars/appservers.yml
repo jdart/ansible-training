@@ -1,0 +1,7 @@
+---
+
+http_port: 8585
+
+shutdown_port: -1
+
+DB_HOST: 127.0.0.1
